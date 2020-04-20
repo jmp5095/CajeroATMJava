@@ -6,6 +6,7 @@
 package Guis;
 
 import clases.Cuenta;
+import clases.Transaccion;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.FlowLayout;
@@ -14,8 +15,6 @@ import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -30,7 +29,8 @@ import javax.swing.JTextField;
 public class CajeroGui extends JFrame implements ActionListener{
     public static Cuenta cuenta=new Cuenta();
     public static double efectivo=1000000;
-    String aux="";
+    public static TransaccionGui l;
+     String aux="";
     Container contenedor=getContentPane();
     
     //planeo que sean un par de imagener que representan esto
@@ -214,6 +214,8 @@ public class CajeroGui extends JFrame implements ActionListener{
         this.entrada.setText(" ");
         this.dispensador.setText(" ");
         cuenta.consultarCuenta();
+        cuenta.actualizarCuenta();
+        cuenta.consultarCuenta();
         aux="Su saldo es: \n"+cuenta.getMonto();
         salida.setText(aux);
     }
@@ -228,18 +230,9 @@ public class CajeroGui extends JFrame implements ActionListener{
         aux=entrada.getText();
         if (!aux.equals(" ")) {
             if (esNumerico(aux)) {
-                if (esValido(aux)) {
-                    double mon=Double.parseDouble(aux);
-                    aux= CajeroGui.cuenta.abonarMonto(mon);
-                    CajeroGui.cuenta.consultarCuenta();
-              
-                    salida.setText(aux);
-                    LoginGui.cajero.concatenaSalida("\nSaldo Actual:\n"+CajeroGui.cuenta.getMonto());
-                    LoginGui.cajero.concatenaSalida("Saldo Anterior:\n"+(CajeroGui.cuenta.getMonto()-mon));
-                    LoginGui.cajero.concatenaSalida("Cantidad Abonada:\n"+mon+"\n\n");
-                }else{
-                    salida.setText("la minima cantidad \nque puede abonar\n es 1000");
-                }
+                
+                 l=new TransaccionGui();
+                l.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
               
             }else{
                 salida.setText("Lo ingresado\nEn el deposito \n"
@@ -250,9 +243,56 @@ public class CajeroGui extends JFrame implements ActionListener{
                          + "en la ranura \ninferior del atm \n"
                          + "destinada al deposito.");
         }
-        
+    }
+    public void depositarEnCuenta(String deposito){
+        if (esValido(aux)) {
+            
+                    double mon=Double.parseDouble(aux);
+                    Transaccion t= new Transaccion();
+                    t.setMonto(mon);
+                    t.setAprovacion(false);
+                    t.setRealizada(false);
+                    t.setCuentaDepositante(cuenta.getNumeroDeCuenta());
+                    t.setCuentaDeposito(deposito);
+                    
+                    t.registrar();
+                    this.salida.setText(" ");
+                    LoginGui.cajero.concatenaSalida("Apreciado usuario:\n"
+                            + "tenga en cuenta que\n"
+                            + "la cantidad abonada\n"
+                            + "sera verificada y aprobada\n"
+                            + "por nuestro personal.\n");
+                  
+                }else{
+                    salida.setText("la minima cantidad \nque puede abonar\n es 1000");
+                }
         this.entrada.setText(" ");
     }
+    public void depositarMiCuenta(){
+        if (esValido(aux)) {
+            
+                    double mon=Double.parseDouble(aux);
+                    Transaccion t= new Transaccion();
+                    t.setMonto(mon);
+                    t.setAprovacion(false);
+                    t.setRealizada(false);
+                    t.setCuentaDepositante(cuenta.getNumeroDeCuenta());
+                    t.setCuentaDeposito(cuenta.getNumeroDeCuenta());
+                    
+                    t.registrar();
+                    this.salida.setText(" ");
+                    LoginGui.cajero.concatenaSalida("Apreciado usuario:\n"
+                            + "tenga en cuenta que\n"
+                            + "la cantidad abonada\n"
+                            + "sera verificada y aprobada\n"
+                            + "por nuestro personal.\n");
+                  
+                }else{
+                    salida.setText("la minima cantidad \nque puede abonar\n es 1000");
+                }
+        this.entrada.setText(" ");
+    }
+
     public void estiloNumeros(Font auxFont,int t){
         uno.setFont(new Font(auxFont.getFontName(),auxFont.getStyle(),t));
         dos.setFont(new Font(auxFont.getFontName(),auxFont.getStyle(),t));
@@ -318,6 +358,9 @@ public class CajeroGui extends JFrame implements ActionListener{
     }
     public void instanciaCuenta(){
         cuenta.setC(LoginGui.cliLogueado);
+        
+        cuenta.consultarCuenta();
+        cuenta.actualizarCuenta();
         cuenta.consultarCuenta();
         
         System.out.println(cuenta.getNumeroDeCuenta());

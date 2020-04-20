@@ -45,11 +45,11 @@ public class RetiroGui extends JFrame implements ActionListener{
         
         mensaje=new JLabel("Elija la Cantidad a Retirar");
         
-        veinte=new JButton("20");
-        cuarenta=new JButton("40");
-        sesenta=new JButton("60");
-        cien=new JButton("100");
-        docientos=new JButton("200");
+        veinte=new JButton("20.000");
+        cuarenta=new JButton("40.000");
+        sesenta=new JButton("60.000");
+        cien=new JButton("100.000");
+        docientos=new JButton("200.000");
         
         cancelar=new JButton("Cancelar");
         

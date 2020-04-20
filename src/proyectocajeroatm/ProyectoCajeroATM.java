@@ -6,6 +6,7 @@
 package proyectocajeroatm;
 
 import Guis.LoginGui;
+import Guis.TransaccionGui;
 import javax.swing.JFrame;
 /**
  *

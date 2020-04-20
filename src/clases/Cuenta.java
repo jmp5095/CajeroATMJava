@@ -67,7 +67,7 @@ public class Cuenta {
     public String abonarMonto(double cantidad){
         this.consultarCuenta();
                 try{
-                    CajeroGui.efectivo=CajeroGui.efectivo+cantidad;
+                    
                     double aux=this.getMonto()+cantidad;
                 //variables objeto db
                     Connection conexion;
@@ -92,6 +92,7 @@ public class Cuenta {
     }
     public void consultarCuenta(){
         try{
+            
             
          //variables objeto db
             Connection conexion;
@@ -123,6 +124,14 @@ public class Cuenta {
             
         }
         
+    }
+    public void actualizarCuenta(){
+        Transaccion t =new Transaccion();
+        double sumT=t.sumarTransacciones(this.getNumeroDeCuenta());
+            System.out.println(sumT);
+            this.abonarMonto(sumT);
+            t.actualizarTransacciones();
+            Transaccion.transacciones.clear();
     }
     public String getNumeroDeCuenta() {
         return numeroDeCuenta;
