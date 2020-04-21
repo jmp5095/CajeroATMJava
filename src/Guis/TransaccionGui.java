@@ -5,6 +5,8 @@
  */
 package Guis;
 
+import clases.Cliente;
+import clases.Cuenta;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.FlowLayout;
@@ -25,12 +27,11 @@ import javax.swing.JTextField;
  * @author juan
  */
 public class TransaccionGui extends JFrame implements ActionListener{
-    
     Container contenedor=getContentPane();
     JTextArea salida;
     JLabel numeroDeCuental;
-    JButton miCuenta;
-    JButton otraCuenta;
+    JLabel cantidadl;
+    JButton realizar;
     JButton cancelar;
     
     JPanel botones;
@@ -39,40 +40,41 @@ public class TransaccionGui extends JFrame implements ActionListener{
     GridLayout esquemae;
     
     JTextField numeroDeCuenta;
-    
-    
+    JTextField cantidad;
     public TransaccionGui(){
         contenedor.setLayout(new FlowLayout());
         salida= new JTextArea();
         salida.setEditable(false);
         
-        miCuenta=new JButton("abonar a mi cuenta");
-        otraCuenta= new JButton("abonar a otra cuenta");
+        realizar=new JButton("Realizar transaccion");
         cancelar=new JButton("Cancelar");
         
         numeroDeCuental=new JLabel("Número de cuenta");
-        numeroDeCuenta= new JTextField(15);
+        numeroDeCuenta= new JTextField(" ");
+        
+        cantidadl=new JLabel("Monto a abonar");
+        cantidad=new JTextField(" ");
         
         botones=new JPanel();
-        esquemab=new GridLayout(3,1,1,2);
+        esquemab=new GridLayout(2,1,1,2);
         botones.setLayout(esquemab);
         
-        botones.add(miCuenta);
-        botones.add(otraCuenta);
+        botones.add(realizar);
         botones.add(cancelar);
         
         entrada=new JPanel();
-        esquemae=new GridLayout(3,1,1,2);
+        esquemae=new GridLayout(4,1,1,2);
         entrada.setLayout(esquemae);
         
         entrada.add(numeroDeCuental);
         entrada.add(numeroDeCuenta);
-        
+        entrada.add(cantidadl);
+        entrada.add(cantidad);
         
         //posicion y tamaño de los elementos
-        salida.setBounds(new Rectangle(50,30,230,60));
-        botones.setBounds(new Rectangle(50,110,230,100));
-        entrada.setBounds(new Rectangle(50,220,230,75));
+        salida.setBounds(new Rectangle(50,25,230,60));
+        botones.setBounds(new Rectangle(50,110,230,80));
+        entrada.setBounds(new Rectangle(50,210,230,95));
         
         //estilo 
         Font auxFont=salida.getFont();
@@ -86,17 +88,14 @@ public class TransaccionGui extends JFrame implements ActionListener{
         contenedor.setBackground(Color.WHITE);
         salida.setBackground(new java.awt.Color(54,22,181));
         salida.setForeground(new java.awt.Color(255,255,255));
-        miCuenta.setBackground(Color.WHITE);
-        miCuenta.setForeground(new java.awt.Color(54,22,181));
-        otraCuenta.setBackground(Color.WHITE);
-        otraCuenta.setForeground(new java.awt.Color(54,22,181));
+        realizar.setBackground(Color.WHITE);
+        realizar.setForeground(new java.awt.Color(54,22,181));
         cancelar.setBackground(new java.awt.Color(245,35,20));
         cancelar.setForeground(Color.WHITE);
         entrada.setBackground(Color.white);
         
         //add listeners
-        this.miCuenta.addActionListener(this);
-        this.otraCuenta.addActionListener(this);
+        this.realizar.addActionListener(this);
         this.cancelar.addActionListener(this);
         
         this.setSize(333,370);
@@ -106,34 +105,73 @@ public class TransaccionGui extends JFrame implements ActionListener{
     }
     @Override
     public void actionPerformed(ActionEvent e){
-        if (e.getSource().equals(miCuenta)) {
-            LoginGui.cajero.depositarEnCuenta(CajeroGui.cuenta.getNumeroDeCuenta());
-            this.setVisible(false);
+        if (e.getSource().equals(realizar)) {
+            accionTransaccion();
         }
-        if (e.getSource().equals(otraCuenta)) {
-            String en=numeroDeCuenta.getText();
-            if (!en.equals("")) {
-                if (LoginGui.cajero.esNumerico(en)) {
-                    LoginGui.cajero.depositarEnCuenta(en);
-                    this.setVisible(false);
+    }
+    
+    public void accionTransaccion(){
+        String numCuenta=numeroDeCuenta.getText();
+        String can=cantidad.getText();
+        if (!numCuenta.equals(" ")) {
+            if (!can.equals(" ")) {
+                if (LoginGui.cajero.esNumerico(numCuenta)) {
+                    
+                    if (LoginGui.cajero.esNumerico(can)) {
+                       
+                       
+                        Cuenta c=new Cuenta();
+                        Cliente cli=new Cliente();
+                        c.setNumeroDeCuenta(numCuenta);
+                        c.setC(cli);
+                        c.consultarCuentaId();
+                        
+                        if (c.getTipo()!=null) {
+                             Double mon=Double.parseDouble(can);
+                             String r= CajeroGui.cuenta.restarMonto(mon);
+                             if (r.equals("Retiro exitoso.")) {
+                               r = c.abonarMonto(mon);
+                               r=r+"\nMonto transferido:"
+                                 + "\n"+mon+"\n"
+                                 + "Cuenta depositada:\n"
+                                 + c.getNumeroDeCuenta()+"\n"
+                                 + "Transferencia desde:\n"
+                                 + CajeroGui.cuenta.getNumeroDeCuenta();
+                               LoginGui.cajero.salida.setText(r);
+                               
+                               this.setVisible(false);
+                            }else{
+                               LoginGui.cajero.salida.setText(r);
+                               this.setVisible(false);
+                            }
+                        }else{
+                            salida.setText("El numero de cuenta ingresado"
+                                    + "\nno corresponde a ninguna"
+                                    + "\ncuenta registrada");
+                        }
+                       
+                        
+                    }else{
+                        salida.setText("Lo ingresado no es"
+                             + "\nun numero."
+                        + "\nMonto erroneo.");
+                    }
+                    
                 }else{
-                   salida.setText("Lo ingresado no es un "
-                           + "\nnumero");
+                     salida.setText("Lo ingresado no es"
+                             + "\nun numero."
+                        + "\nCuenta erronea.");
                 }
             }else{
-                salida.setText("Ingrese por favor el \nnumero de cuenta en la "
-                        + "\nparte inferior");
+                salida.setText("Ingrese la cantidad que"
+                             + "\ndesea abonar en la parte"
+                             + "\ninferior de la pantalla.");
             }
-        }
-        if (e.getSource().equals(cancelar)) {
-            this.setVisible(false);
+            
+        }else{
+            salida.setText("Ingrese el numero de cuenta"
+                    + "\nen la parte inferior"
+                    + "\nde la pantalla.");
         }
     }
-
-    public String getNumeroDeCuenta() {
-        return this.numeroDeCuenta.getText();
-    }
-
-    
-    
 }

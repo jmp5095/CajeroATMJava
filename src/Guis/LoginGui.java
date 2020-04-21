@@ -128,8 +128,8 @@ public class LoginGui extends JFrame implements ActionListener{
     
     public void accionAceptar(){
         
-        String ce="288475864";
-        String co="vladimir123";
+        String ce=campocedula.getText();
+        String co=campopass.getText();
         Cliente cliente;
         cliente = new Cliente(ce,co);
         

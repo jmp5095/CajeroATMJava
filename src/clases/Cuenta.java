@@ -64,6 +64,36 @@ public class Cuenta {
         
         
     }
+    public String restarMonto(double cantidad){
+        this.consultarCuenta();
+            if (this.monto>=cantidad) {
+                try{
+                    CajeroGui.setEfectivo(CajeroGui.getEfectivo()-cantidad); 
+                    double aux=this.getMonto()-cantidad;
+                //variables objeto db
+                    Connection conexion;
+                    Statement comando;
+                //creo objeto conexion
+                    MySQL bd=new MySQL();
+                    bd.MySQLConnect();
+
+                    comando=bd.getComando();
+                    conexion=bd.getConexion();
+
+                    String Query="update "+this.nombreClase()+" set cue_monto="+aux+" where cue_numero_de_cuenta ="+"'"+this.getNumeroDeCuenta()+"'";
+
+                    comando= conexion.createStatement();
+                    comando.execute(Query);
+                    return "Retiro exitoso.";
+                }catch(SQLException e){
+                    return "ocurrio un error inesperado";
+                }
+            }else{
+                return "Lo sentimos no tiene \nsaldo suficiente.";
+            }
+        
+        
+    }
     public String abonarMonto(double cantidad){
         this.consultarCuenta();
                 try{
@@ -115,10 +145,44 @@ public class Cuenta {
             while(consulta.next()){
                         this.numeroDeCuenta=consulta.getString("cue_numero_de_cuenta");
                         this.tipo=consulta.getString("cue_tipo_de_cuenta");
+                        this.c.setCedula(consulta.getString("tbl_cli_cedula"));
                         this.monto=Double.parseDouble(consulta.getString("cue_monto"));
             }
             
             this.setC(c);
+        }catch(SQLException e){
+            System.out.println(e.toString()+"<-este fue");
+            
+        }
+        
+    }
+    public void consultarCuentaId(){
+        try{
+            
+            
+         //variables objeto db
+            Connection conexion;
+            Statement comando;
+            ResultSet consulta;
+        //creo objeto conexion
+            MySQL bd=new MySQL();
+            bd.MySQLConnect();
+            
+            conexion=bd.getConexion();
+            comando=bd.getComando();
+            consulta=bd.getConsulta();
+            
+            String Query="select * from "+this.nombreClase()+" where cue_numero_de_cuenta="+this.numeroDeCuenta;
+            
+            comando= conexion.createStatement();
+            consulta= comando.executeQuery(Query);
+            
+            while(consulta.next()){
+                        this.numeroDeCuenta=consulta.getString("cue_numero_de_cuenta");
+                        this.tipo=consulta.getString("cue_tipo_de_cuenta");
+                        this.monto=Double.parseDouble(consulta.getString("cue_monto"));
+            }
+            
         }catch(SQLException e){
             System.out.println(e.toString()+"<-este fue");
             

@@ -29,7 +29,7 @@ import javax.swing.JTextField;
 public class CajeroGui extends JFrame implements ActionListener{
     public static Cuenta cuenta=new Cuenta();
     public static double efectivo=1000000;
-    public static TransaccionGui l;
+    public static AbonoGui l;
      String aux="";
     Container contenedor=getContentPane();
     
@@ -55,6 +55,7 @@ public class CajeroGui extends JFrame implements ActionListener{
     JButton saldo;
     JButton retirar;
     JButton depositar;
+    JButton transaccion;
     JButton cancelar;
     
     JPanel numeros;
@@ -89,6 +90,7 @@ public class CajeroGui extends JFrame implements ActionListener{
         saldo=new JButton("Saldo");
         retirar=new JButton("Retiro");
         depositar=new JButton("Abono");
+        transaccion=new JButton("Transaccion");
         cancelar=new JButton("Cancelar");
         
         entradal=new JLabel("Deposito");
@@ -129,11 +131,12 @@ public class CajeroGui extends JFrame implements ActionListener{
         salida.setBounds(new Rectangle(50,50,230,180));
         numeros.setBounds(new Rectangle(50,250,150,100));
         acciones.setBounds(new Rectangle(205,250,80,100));
-        cancelar.setBounds(new Rectangle(85,370,160,30));
-        entradal.setBounds(new Rectangle(50,420,235,20));
-        entrada.setBounds(new Rectangle(50,450,235,25));
-        dispensadorl.setBounds(new Rectangle(50,480,235,20));
-        dispensador.setBounds(new Rectangle(50,510,235,25));
+        transaccion.setBounds(new Rectangle(85,370,160,30));
+        cancelar.setBounds(new Rectangle(85,410,160,30));
+        entradal.setBounds(new Rectangle(50,460,235,20));
+        entrada.setBounds(new Rectangle(50,490,235,25));
+        dispensadorl.setBounds(new Rectangle(50,520,235,20));
+        dispensador.setBounds(new Rectangle(50,550,235,25));
         
         //estilo 
         Font auxFont=salida.getFont();
@@ -143,6 +146,7 @@ public class CajeroGui extends JFrame implements ActionListener{
         estiloNumeros(numerosf,15);
         estiloAcciones(numerosf,12);
         
+        transaccion.setFont(new Font(auxFont.getFontName(),auxFont.getStyle(),15));
         cancelar.setFont(new Font(auxFont.getFontName(),auxFont.getStyle(),15));
         
         entradal.setFont(new Font(auxFont.getFontName(),auxFont.getStyle(),15));
@@ -156,6 +160,8 @@ public class CajeroGui extends JFrame implements ActionListener{
         salida.setForeground(new java.awt.Color(255,255,255));
         colorNumeros();
         colorAcciones();
+        transaccion.setBackground(new java.awt.Color(37,55,144));
+        transaccion.setForeground(Color.WHITE);
         cancelar.setBackground(new java.awt.Color(245,35,20));
         cancelar.setForeground(Color.WHITE);
         
@@ -167,6 +173,7 @@ public class CajeroGui extends JFrame implements ActionListener{
         contenedor.add(salida);
         contenedor.add(numeros);
         contenedor.add(acciones);
+        contenedor.add(transaccion);
         contenedor.add(cancelar);
         contenedor.add(entradal);
         contenedor.add(entrada);
@@ -175,7 +182,7 @@ public class CajeroGui extends JFrame implements ActionListener{
         contenedor.setLayout(null);
         
         
-        this.setSize(333,630);
+        this.setSize(333,660);
         this.setVisible(true);
         this.setLocationRelativeTo(null);
         
@@ -193,6 +200,9 @@ public class CajeroGui extends JFrame implements ActionListener{
         }
         if (e.getSource().equals(depositar)) {
             accionDepositar();
+        }
+        if (e.getSource().equals(transaccion)) {
+            accionTransaccion();
         }
         if (e.getSource().equals(cancelar)) {
             accionCancelar();
@@ -231,7 +241,7 @@ public class CajeroGui extends JFrame implements ActionListener{
         if (!aux.equals(" ")) {
             if (esNumerico(aux)) {
                 
-                 l=new TransaccionGui();
+                 l=new AbonoGui();
                 l.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
               
             }else{
@@ -243,6 +253,10 @@ public class CajeroGui extends JFrame implements ActionListener{
                          + "en la ranura \ninferior del atm \n"
                          + "destinada al deposito.");
         }
+    }
+    public void accionTransaccion(){
+        TransaccionGui miTransaccion= new TransaccionGui();
+        miTransaccion.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
     public void depositarEnCuenta(String deposito){
         if (esValido(aux)) {
@@ -350,6 +364,7 @@ public class CajeroGui extends JFrame implements ActionListener{
         this.retirar.addActionListener(this);
         this.depositar.addActionListener(this);
         //this.enter.addActionListener(this);
+        this.transaccion.addActionListener(this);
         this.cancelar.addActionListener(this);
     }
     public void mostrarLoginGui(){
