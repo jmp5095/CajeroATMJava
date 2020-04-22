@@ -18,7 +18,8 @@ import proyectocajeroatm.MySQL;
  * @author juan
  */
 public class Transaccion {
-    public static ArrayList <Transaccion> transacciones=new ArrayList<>();
+
+    public static ArrayList<Transaccion> transacciones = new ArrayList<>();
     private int id;
     private double monto;
     private double fecha;
@@ -26,8 +27,9 @@ public class Transaccion {
     private boolean realizada;
     private String cuentaDepositante;
     private String cuentaDeposito;
-    
-    public Transaccion(){}
+
+    public Transaccion() {
+    }
 
     public Transaccion(double monto, boolean aprovacion, boolean realizada, String cuentaDepositante, String cuentaDeposito) {
         this.monto = monto;
@@ -36,95 +38,97 @@ public class Transaccion {
         this.cuentaDepositante = cuentaDepositante;
         this.cuentaDeposito = cuentaDeposito;
     }
-    public void registrar(){
-                try{
-                //variables objeto db
-                    Connection conexion;
-                    Statement comando;
-                //creo objeto conexion
-                    MySQL bd=new MySQL();
-                    bd.MySQLConnect();
 
-                    comando=bd.getComando();
-                    conexion=bd.getConexion();
-                         
-                    String Query="insert into Transaccion"+"(tra_monto,tra_fecha,tra_aprobacion,tra_realizada,tbl_cue_depositante,tbl_cue_deposito)"
-                                            + "values("+this.monto+","+"now()"+","+this.isAprovacion()+","+this.isRealizada()+","+"'"+this.cuentaDepositante+"'"+","+"'"+this.cuentaDeposito+"'"+")";
-                    System.out.println("se ejecuto");
-                    comando= conexion.createStatement();
-                    
-                    comando.execute(Query);
-                    
-                    
-                }catch(SQLException e){
-                    System.out.println(e.toString());
-                   
-                }
+    public boolean registrar() {
+        try {
+            //variables objeto db
+            Connection conexion;
+            Statement comando;
+            //creo objeto conexion
+            MySQL bd = new MySQL();
+            bd.MySQLConnect();
+
+            comando = bd.getComando();
+            conexion = bd.getConexion();
+
+            String Query = "insert into Transaccion" + "(tra_monto,tra_fecha,tra_aprobacion,tra_realizada,tbl_cue_depositante,tbl_cue_deposito)"
+                    + "values(" + this.monto + "," + "now()" + "," + this.isAprovacion() + "," + this.isRealizada() + "," + "'" + this.cuentaDepositante + "'" + "," + "'" + this.cuentaDeposito + "'" + ")";
+            
+            comando = conexion.createStatement();
+
+            comando.execute(Query);
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e.toString());
+            return false;
+            
+
+        }
     }
-    public double sumarTransacciones(String numeroDeCuenta){
-        double total=0;
-                try{
-            Transaccion t =new Transaccion();
-         //variables objeto db
+
+    public double sumarTransacciones(String numeroDeCuenta) {
+        double total = 0;
+        try {
+            Transaccion t = new Transaccion();
+            //variables objeto db
             Connection conexion;
             Statement comando;
             ResultSet consulta;
-        //creo objeto conexion
-            MySQL bd=new MySQL();
+            //creo objeto conexion
+            MySQL bd = new MySQL();
             bd.MySQLConnect();
-            
-            conexion=bd.getConexion();
-            comando=bd.getComando();
-            consulta=bd.getConsulta();
-            
-            String Query="select * from Transaccion where tra_aprobacion=true "
+
+            conexion = bd.getConexion();
+            comando = bd.getComando();
+            consulta = bd.getConsulta();
+
+            String Query = "select * from Transaccion where tra_aprobacion=true "
                     + " and tra_realizada=false"
-                    + " and tbl_cue_deposito="+numeroDeCuenta;
-            
-            comando= conexion.createStatement();
-            consulta= comando.executeQuery(Query);
-            
-            while(consulta.next()){
-                        Transaccion mit=new Transaccion();
-                        mit.id=Integer.parseInt(consulta.getString("tra_id_transaccion"));
-                        mit.monto=Double.parseDouble(consulta.getString("tra_monto"));
-                        transacciones.add(mit);
-                        total+=mit.monto;
+                    + " and tbl_cue_deposito=" + numeroDeCuenta;
+
+            comando = conexion.createStatement();
+            consulta = comando.executeQuery(Query);
+
+            while (consulta.next()) {
+                Transaccion mit = new Transaccion();
+                mit.id = Integer.parseInt(consulta.getString("tra_id_transaccion"));
+                mit.monto = Double.parseDouble(consulta.getString("tra_monto"));
+                transacciones.add(mit);
+                total += mit.monto;
             }
             return total;
-        }catch(SQLException e){
-            System.out.println(e.toString()+"<-este fue");
+        } catch (SQLException e) {
+            System.out.println(e.toString() + "<-este fue");
             return total;
         }
     }
-        
-    public void actualizarTransacciones(){
-        try{
-                //variables objeto db
-                    Connection conexion;
-                    Statement comando;
-                //creo objeto conexion
-                    MySQL bd=new MySQL();
-                    bd.MySQLConnect();
 
-                    comando=bd.getComando();
-                    conexion=bd.getConexion();
-                    for (Transaccion t:transacciones) {
-                        String Query="update Transaccion set tra_realizada=1 where tra_id_transaccion="+t.id;
-                        System.out.println("se ejecuto");
-                        comando= conexion.createStatement();
+    public void actualizarTransacciones() {
+        try {
+            //variables objeto db
+            Connection conexion;
+            Statement comando;
+            //creo objeto conexion
+            MySQL bd = new MySQL();
+            bd.MySQLConnect();
 
-                        comando.execute(Query);
-                    }
-                    
-                    
-                    
-                }catch(SQLException e){
-                    System.out.println(e.toString());
-                   
-                }
-        
+            comando = bd.getComando();
+            conexion = bd.getConexion();
+            for (Transaccion t : transacciones) {
+                String Query = "update Transaccion set tra_realizada=1 where tra_id_transaccion=" + t.id;
+                System.out.println("se ejecuto");
+                comando = conexion.createStatement();
+
+                comando.execute(Query);
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.toString());
+
+        }
+
     }
+
     public static ArrayList<Transaccion> getTransacciones() {
         return transacciones;
     }
@@ -140,6 +144,7 @@ public class Transaccion {
     public void setId(int id) {
         this.id = id;
     }
+
     public double getMonto() {
         return monto;
     }
@@ -187,8 +192,8 @@ public class Transaccion {
     public void setCuentaDeposito(String cuentaDeposito) {
         this.cuentaDeposito = cuentaDeposito;
     }
-    
-    public String nombreClase(){
+
+    public String nombreClase() {
         return this.getClass().getSimpleName();
     }
 }

@@ -113,7 +113,7 @@ public class AbonoGui extends JFrame implements ActionListener{
         if (e.getSource().equals(otraCuenta)) {
             String en=numeroDeCuenta.getText();
             if (!en.equals("")) {
-                if (LoginGui.cajero.esNumerico(en)) {
+                if (LoginGui.cajero.esNumerico(en)){
                     LoginGui.cajero.depositarEnCuenta(en);
                     this.setVisible(false);
                 }else{

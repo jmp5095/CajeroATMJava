@@ -4,11 +4,9 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/juan/NetBeansProjects/clase%204/ProyectoCajeroATM/src/Guis/LoginGui.java</file>
-            <file>file:/home/juan/NetBeansProjects/clase%204/ProyectoCajeroATM/src/clases/Cliente.java</file>
-            <file>file:/home/juan/NetBeansProjects/clase%204/ProyectoCajeroATM/src/Guis/CajeroGui.java</file>
+            <file>file:/home/juan/NetBeansProjects/clase%204/ProyectoCajeroATM/src/Guis/RetiroGui.java</file>
             <file>file:/home/juan/NetBeansProjects/clase%204/ProyectoCajeroATM/src/proyectocajeroatm/MySQL.java</file>
-            <file>file:/home/juan/NetBeansProjects/clase%204/ProyectoCajeroATM/src/clases/Cuenta.java</file>
-            <file>file:/home/juan/NetBeansProjects/clase%204/ProyectoCajeroATM/src/proyectocajeroatm/ProyectoCajeroATM.java</file>
+            <file>file:/home/juan/NetBeansProjects/clase%204/ProyectoCajeroATM/src/Guis/TransaccionGui.java</file>
         </group>
     </open-files>
 </project-private>

@@ -109,7 +109,8 @@ public class Cliente {
             consulta=bd.getConsulta();
             
             String Query="select * from "+this.nombreClase()+","+"Ciudad"+" where cli_cedula="+"'"+this.cedula+"'"
-                    + " and tbl_ciu_id_ciudad =ciu_id_ciudad";
+                   + " and tbl_ciu_id_ciudad =ciu_id_ciudad";
+            
             
             comando= conexion.createStatement();
             consulta= comando.executeQuery(Query);

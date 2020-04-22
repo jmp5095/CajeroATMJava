@@ -176,13 +176,14 @@ public class Cuenta {
             
             comando= conexion.createStatement();
             consulta= comando.executeQuery(Query);
-            
+            String ceed="";
             while(consulta.next()){
                         this.numeroDeCuenta=consulta.getString("cue_numero_de_cuenta");
                         this.tipo=consulta.getString("cue_tipo_de_cuenta");
                         this.monto=Double.parseDouble(consulta.getString("cue_monto"));
+                        this.c.setCedula(consulta.getString("tbl_cli_cedula"));
             }
-            
+            System.out.println(ceed);
         }catch(SQLException e){
             System.out.println(e.toString()+"<-este fue");
             

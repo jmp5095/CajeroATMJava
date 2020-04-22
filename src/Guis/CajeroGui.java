@@ -28,7 +28,7 @@ import javax.swing.JTextField;
  */
 public class CajeroGui extends JFrame implements ActionListener{
     public static Cuenta cuenta=new Cuenta();
-    public static double efectivo=1000000;
+    public static double efectivo=0;
     public static AbonoGui l;
      String aux="";
     Container contenedor=getContentPane();
@@ -87,13 +87,13 @@ public class CajeroGui extends JFrame implements ActionListener{
         nueve=new JButton("9");
         cero=new JButton("0");
         
-        saldo=new JButton("Saldo");
+        saldo=new JButton("Sáldo");
         retirar=new JButton("Retiro");
         depositar=new JButton("Abono");
-        transaccion=new JButton("Transaccion");
+        transaccion=new JButton("Transacción");
         cancelar=new JButton("Cancelar");
         
-        entradal=new JLabel("Deposito");
+        entradal=new JLabel("Depósito");
         entrada=new JTextField(15);
         entrada.setText(" ");
         dispensadorl=new JLabel("Dispensador");
@@ -240,10 +240,14 @@ public class CajeroGui extends JFrame implements ActionListener{
         aux=entrada.getText();
         if (!aux.equals(" ")) {
             if (esNumerico(aux)) {
-                
-                 l=new AbonoGui();
-                l.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-              
+                if (Double.parseDouble(aux)>=1000) {
+                    l=new AbonoGui();
+                    l.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                }else{
+                    salida.setText("La cantidad minima"
+                            + "\nposible a depositar"
+                            + "\nes de 1000");
+                }
             }else{
                 salida.setText("Lo ingresado\nEn el deposito \n"
                              + "No es dinero!");
@@ -259,6 +263,7 @@ public class CajeroGui extends JFrame implements ActionListener{
         miTransaccion.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
     public void depositarEnCuenta(String deposito){
+        this.salida.setText(" ");
         if (esValido(aux)) {
             
                     double mon=Double.parseDouble(aux);
@@ -269,43 +274,28 @@ public class CajeroGui extends JFrame implements ActionListener{
                     t.setCuentaDepositante(cuenta.getNumeroDeCuenta());
                     t.setCuentaDeposito(deposito);
                     
-                    t.registrar();
-                    this.salida.setText(" ");
-                    LoginGui.cajero.concatenaSalida("Apreciado usuario:\n"
-                            + "tenga en cuenta que\n"
-                            + "la cantidad abonada\n"
-                            + "sera verificada y aprobada\n"
-                            + "por nuestro personal.\n");
-                  
-                }else{
-                    salida.setText("la minima cantidad \nque puede abonar\n es 1000");
-                }
-        this.entrada.setText(" ");
-    }
-    public void depositarMiCuenta(){
-        if (esValido(aux)) {
-            
-                    double mon=Double.parseDouble(aux);
-                    Transaccion t= new Transaccion();
-                    t.setMonto(mon);
-                    t.setAprovacion(false);
-                    t.setRealizada(false);
-                    t.setCuentaDepositante(cuenta.getNumeroDeCuenta());
-                    t.setCuentaDeposito(cuenta.getNumeroDeCuenta());
                     
-                    t.registrar();
-                    this.salida.setText(" ");
-                    LoginGui.cajero.concatenaSalida("Apreciado usuario:\n"
+                    if (t.registrar()){
+                       
+                      LoginGui.cajero.concatenaSalida("Apreciado usuario:\n"
                             + "tenga en cuenta que\n"
                             + "la cantidad abonada\n"
                             + "sera verificada y aprobada\n"
                             + "por nuestro personal.\n");
+                    }else{
+                        LoginGui.cajero.concatenaSalida("No fue posible realizar\n"
+                            + "el deposito, la cuenta \n"
+                            + "ingresada no esta almacenada\n"
+                            + "en nuestra base de datos\n");
+                    }
+                    
                   
                 }else{
                     salida.setText("la minima cantidad \nque puede abonar\n es 1000");
                 }
         this.entrada.setText(" ");
     }
+
 
     public void estiloNumeros(Font auxFont,int t){
         uno.setFont(new Font(auxFont.getFontName(),auxFont.getStyle(),t));
