@@ -148,6 +148,7 @@ public class TransaccionGui extends JFrame implements ActionListener {
                                         t.setAprovacion(true);
                                         t.setRealizada(true);
                                         t.registrar();
+                                        
                                         r = "Transferencia exitosa!"
                                                 + "\nMonto transferido:"
                                                 + "\n" + mon + "\n"
@@ -174,7 +175,7 @@ public class TransaccionGui extends JFrame implements ActionListener {
                                         + "\ncuenta registrada");
                             }
                         } else {
-                            salida.setText("La cantidad minima a"
+                            salida.setText("La cantidad minima"
                                     + "\nde transferencia permitida"
                                     + "\nes de 1000");
                         }

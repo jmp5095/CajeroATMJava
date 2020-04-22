@@ -28,7 +28,7 @@ import javax.swing.JTextField;
  */
 public class CajeroGui extends JFrame implements ActionListener{
     public static Cuenta cuenta=new Cuenta();
-    public static double efectivo=0;
+    public static double efectivo=10000000;
     public static AbonoGui l;
      String aux="";
     Container contenedor=getContentPane();
